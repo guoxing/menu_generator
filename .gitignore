@@ -1,0 +1,6 @@
+*.json
+*.pickle
+*.txt
+*.pdf
+.DS_Store
+ner_conll03
