@@ -266,4 +266,32 @@ def generateData(filename, word_to_num, tag_to_num, wsize):
     # words = [x for x in words_orig if x != "<s>" and x != "</s>"]
     return X, y, wds
 
+def sample_wrong_predicts(y_pred, y_true, X_train, word_to_num, n=5):
+    windowSize = len(X_train[0])
+    res_list = []
+    while len(res_list) < n:
+        idx = random.randint(len(y_pred))
+        if y_pred[idx] == y_true[idx]:
+            continue
+        res = []
+        i = idx
+        while X_train[i][windowSize/2-1] != word_to_num['<s>']:
+            res.append((X_train[i][windowSize/2], y_pred[i], y_true[i]))
+            i -= 1
+        res.append((X_train[i][windowSize/2], y_pred[i], y_true[i]))
+        res.append((X_train[i][0], 0, 0)) 
+        res.reverse()
+        i = idx + 1
+        while X_train[i][windowSize/2+1] != word_to_num['</s>']:
+            res.append((X_train[i][windowSize/2], y_pred[i], y_true[i]))
+            i += 1
+        res.append((X_train[i][windowSize/2], y_pred[i], y_true[i]))
+        res.append((X_train[i][-1], 0, 0))
+        res_list.append(res)
+    return res_list
 
+def translate_samples(samples, num_to_word, tagnames):
+    res_list = []
+    for sample in samples:
+        res_list.append([(num_to_word[x], tagnames[p], tagnames[t]) for x, p, t in sample])
+    return res_list
