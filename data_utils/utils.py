@@ -240,27 +240,30 @@ def docs_filtered(docs):
                 docf.append(seq)
     return docf
 
-def seq_to_contexts(words, tags, word_to_num, tag_to_num, left=1, right=1):
-    ns = len(words)
-    words = [x.lower() if x !="UUUNKKK" else x for x in words]
+def seq_to_contexts(words_o, tags, word_to_num, tag_to_num, left=1, right=1):
+    ns = len(words_o)
+    words = [x.lower() if x !="UUUNKKK" else x for x in words_o]
     X = []
     y = []
+    Wd = []
     for i in range(ns):
         if words[i] == "<s>" or words[i] == "</s>":
             continue 
         tagn = tag_to_num[tags[i]]
         idxs = [word_to_num[words[ii]] for ii in range(i-left, i+right+1)]
+        wds = [words_o[ii] for ii in range(i-left, i+right+1)]
         X.append(idxs)
         y.append(tagn)
-    return array(X), array(y)
+        Wd.append(wds)
+    return array(X), array(y), array(Wd)
 
 def generateData(filename, word_to_num, tag_to_num, wsize):
     pad = (wsize - 1)/2
     d_orig = load_dataset(filename)
     # d_f = docs_filtered(d_orig)
     words_orig, tags_orig = docs_to_data(d_orig, word_to_num, tag_to_num, wsize)
-    X, y = seq_to_contexts(words_orig, tags_orig, word_to_num, tag_to_num, pad, pad)
-    words = [x for x in words_orig if x != "<s>" and x != "</s>"]
-    return X, y, words
+    X, y, wds = seq_to_contexts(words_orig, tags_orig, word_to_num, tag_to_num, pad, pad)
+    # words = [x for x in words_orig if x != "<s>" and x != "</s>"]
+    return X, y, wds
 
 
