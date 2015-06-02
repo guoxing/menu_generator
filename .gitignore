@@ -4,3 +4,4 @@
 *.pdf
 .DS_Store
 ner_conll03
+*.pyc

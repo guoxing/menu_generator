@@ -21,10 +21,10 @@ vocab = defaultdict(int)
 for buz_id, reviews in buz_reviews.items():
     for review in reviews:
         for token in review['text']:
-            vocab[token.lower()] += 1
+            vocab[token.lower().encode('ascii', 'ignore')] += 1
 
 result = sorted(vocab.items(), key=lambda x: x[1], reverse=True)
 
 with open(VOCABULARY_FILE_NAME, 'w') as f:
     for word, freq in result:
-        f.write(word.encode('ascii', 'ignore') + ' ' + str(freq) + '\n')
+        f.write(word + ' ' + str(freq) + '\n')
