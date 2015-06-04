@@ -16,7 +16,7 @@ def load_wv(vocabfile):
 
 def full_report(y_true, y_pred, tagnames):
     cr = metrics.classification_report(y_true, y_pred,
-                                       target_names=tagnames)
+                                       target_names=tagnames, digits=4)
     print cr
 
 def eval_performance(y_true, y_pred, tagnames):
